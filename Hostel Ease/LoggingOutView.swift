@@ -8,8 +8,6 @@ struct LoggingOutView: View {
         ZStack {
             Color.white.ignoresSafeArea()
             VStack(spacing: 60) {
-                Text("Payment Confimed 💸")
-                    .font(.headline)
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .blue))
                     .scaleEffect(2)
