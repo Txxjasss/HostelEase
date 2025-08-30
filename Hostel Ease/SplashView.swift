@@ -1,17 +1,14 @@
 import SwiftUI
-
 struct SplashView: View {
     @State private var isActive = false
     @State private var opacity = 0.0
     @State private var offset: CGFloat = 30
-    
     var body: some View {
         if isActive {
             LoginView()
         } else {
             ZStack {
                 Color.white.ignoresSafeArea()
-                
                 VStack {
                     Text("IIIT Lucknow")
                         .font(.system(size: 50, weight: .bold))
@@ -41,7 +38,6 @@ struct SplashView: View {
         }
     }
 }
-
 #Preview {
     SplashView()
 }

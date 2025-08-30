@@ -1,5 +1,4 @@
 import SwiftUI
-
 struct Room: Identifiable {
     let id = UUID()
     let number: String
@@ -31,89 +30,103 @@ struct DashboardView: View {
         Room(number: "305", capacity: 2, occupied: 1)
     ]
     var body: some View {
-        VStack {
+        VStack(spacing: 15) {
+            // Top Header
             HStack {
                 Spacer()
-                VStack(alignment: .trailing) {
-                    Text("Welcome,")
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("Welcome!")
                         .font(.headline)
-                    Text("\(rollNumber) – \(branchName)")
+                    Text("\(rollNumber) • \(branchName)")
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                    Text("Last date : 23rd Sept 2025")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
+                    Text("Last date: 23rd Sept 2025")
+                        .font(.caption)
+                        .foregroundColor(.gray)
                 }
             }
-            .padding([.top, .horizontal])
-            // ✅ Show Current Room (if allocated)
-            if !allocatedRoom.isEmpty {
-                VStack(alignment: .leading, spacing: 8) {
-                    
-                    Text("My Current Room")
-                        .font(.headline)
-                    NavigationLink(
-                        destination: {
-                            if let index = rooms.firstIndex(where: { $0.number == allocatedRoom }) {
-                                RoomDetailView(room: $rooms[index])
-                            } else {
-                                Text("Room not found")
+            .padding()
+            ScrollView {
+                VStack(spacing: 20) {
+                    // My Current Room Section
+                    if !allocatedRoom.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("My Current Room")
+                                .font(.headline)
+                            NavigationLink {
+                                if let index = rooms.firstIndex(where: { $0.number == allocatedRoom }) {
+                                    RoomDetailView(room: $rooms[index])
+                                } else {
+                                    Text("Room not found")
+                                }
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Room \(allocatedRoom)")
+                                            .font(.title3)
+                                            .fontWeight(.semibold)
+                                        Text("Tap to view details")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "chevron.right.circle.fill")
+                                        .foregroundColor(.blue)
+                                        .font(.title2)
+                                }
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue.opacity(0.1))
+                                .cornerRadius(12)
                             }
                         }
-                    ) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Room \(allocatedRoom)")
-                                    .font(.title3)
-                                    .fontWeight(.semibold)
-                                Text("Tap to view details")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
+                        .padding(.horizontal)
+                    }
+                    // Room list
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Available Rooms")
+                            .font(.headline)
+                            .padding(.horizontal)
+                        ForEach(rooms.indices, id: \.self) { i in
+                            NavigationLink {
+                                RoomDetailView(room: $rooms[i])
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Room \(rooms[i].number)")
+                                            .font(.headline)
+                                        Text("\(rooms[i].occupied)/\(rooms[i].capacity) occupied")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    Spacer()
+                                    if rooms[i].available {
+                                        Label("Available", systemImage: "checkmark.circle.fill")
+                                            .foregroundColor(.green)
+                                            .font(.subheadline)
+                                    } else {
+                                        Label("Full", systemImage: "xmark.circle.fill")
+                                            .foregroundColor(.red)
+                                            .font(.subheadline)
+                                    }
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
                             }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.blue)
+                            .padding(.horizontal)
                         }
-                        .padding()
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(12)
                     }
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 10)
-            }
-            // ✅ Rooms List
-            List {
-                ForEach(rooms.indices, id: \.self) { i in
-                    NavigationLink(
-                        destination: RoomDetailView(room: $rooms[i])
-                    ) {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Room \(rooms[i].number)")
-                                    .font(.headline)
-                                Text("\(rooms[i].occupied)/\(rooms[i].capacity) occupied")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }
-                            Spacer()
-                            if rooms[i].available {
-                                Label("Available", systemImage: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
-                            } else {
-                                Label("Full", systemImage: "xmark.circle.fill")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
+                .padding(.vertical, 10)
             }
         }
-        .navigationTitle("Available Rooms")
+        .navigationTitle("Dashboard")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 #Preview {
-    DashboardView(rollNumber: "LCI2024037", branchName: "CSAI")
+    NavigationStack {
+        DashboardView(rollNumber: "LCI2024037", branchName: "CSAI")
+    }
 }

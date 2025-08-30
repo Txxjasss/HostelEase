@@ -1,40 +1,33 @@
 import SwiftUI
-
 struct LoginView: View {
     @State private var rollNumber = ""
     @State private var password = ""
     @State private var goToDashboard = false
     @State private var branchName = ""
-    
-    @AppStorage("allocatedRoom") private var allocatedRoom: String = "" // Persist allocation
-    
+    @AppStorage("allocatedRoom") private var allocatedRoom: String = ""
     // Validation
     private var isFormValid: Bool {
         return isValidRollNumber(rollNumber) && password.count >= 6
     }
-    
     var body: some View {
         NavigationStack {
             VStack(spacing: 20) {
                 Text("Student Login")
                     .font(.largeTitle)
                     .bold()
-                
-                // Roll Number field
+                // Roll number field
                 TextField("Enter Roll Number", text: $rollNumber)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
                     .autocapitalization(.allCharacters)
-                
                 // Password field
                 SecureField("Enter Password", text: $password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
-                
                 // Login button
                 Button(action: {
                     branchName = extractBranch(from: rollNumber)
-                    goToDashboard = true   // ✅ always goes to dashboard
+                    goToDashboard = true   // always goes to dashboard
                 }) {
                     Text("Login")
                         .frame(maxWidth: .infinity)
@@ -45,8 +38,7 @@ struct LoginView: View {
                         .padding(.horizontal)
                 }
                 .disabled(!isFormValid)
-                
-                // Navigation to Dashboard
+                // Navigation to dashboard
                 NavigationLink(
                     "",
                     destination: DashboardView(rollNumber: rollNumber, branchName: branchName),
@@ -56,7 +48,6 @@ struct LoginView: View {
             .padding()
         }
     }
-    
     // MARK: - Helper functions
     
     private func isValidRollNumber(_ roll: String) -> Bool {
@@ -64,7 +55,6 @@ struct LoginView: View {
         let regex = #"^(LCI|LCB|LCS|LIT)\d{7}$"#
         return roll.range(of: regex, options: .regularExpression) != nil
     }
-    
     private func extractBranch(from roll: String) -> String {
         if roll.hasPrefix("LCI") {
             return "Computer Science (AI)"
@@ -78,7 +68,6 @@ struct LoginView: View {
         return "Unknown Branch"
     }
 }
-
 #Preview {
     LoginView()
 }
