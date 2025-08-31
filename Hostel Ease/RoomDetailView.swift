@@ -13,7 +13,7 @@ struct RoomDetailView: View {
             Text("\(room.occupied)/\(room.capacity) occupied")
                 .foregroundColor(.gray)
                 .font(.headline)
-            // Case 1: Already allocated this room -> Withdraw
+            // Case 1: Already allocated THIS room -> Withdraw
             if allocatedRoom == room.number {
                 Text("You have allocated Room \(allocatedRoom)")
                     .foregroundColor(.green)
@@ -31,9 +31,9 @@ struct RoomDetailView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
             }
-            // Case 2: Already allocated another room
+            // Case 2: Already allocated ANOTHER room
             else if !allocatedRoom.isEmpty {
-                Text("⚠️ You already allocated Room \(allocatedRoom). Withdraw first to change.")
+                Text("You have already allocated Room \(allocatedRoom)!. Withdraw first to change.")
                     .foregroundColor(.red)
                     .multilineTextAlignment(.center)
                     .padding()
